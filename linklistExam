@@ -1,0 +1,99 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+Node* head = NULL;
+
+void print() {
+    Node* temp = head;
+    cout << "The list is: ";
+    while (temp != NULL) {
+        cout << temp->data << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+void insert_first(int x) {
+    Node* temp = new Node;
+    temp->data = x;
+    temp->next = head;
+    head = temp;
+}
+
+void insert_last(int x) {
+    Node* temp = new Node;
+    temp->data = x;
+    temp->next = NULL;
+
+    if (head == NULL) {
+        head = temp;
+    } else {
+        Node* temp_1 = head;
+        while (temp_1->next != NULL) {
+            temp_1 = temp_1->next;
+        }
+        temp_1->next = temp;
+    }
+}
+
+void delete_first() {
+    if (head == NULL) {
+        cout << "List is empty\n";
+        return;
+    }
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+}
+
+void sort_ascending() {
+    if (head == NULL || head->next == NULL) return;
+    for (Node* i = head; i != NULL; i = i->next) {
+        for (Node* j = i->next; j != NULL; j = j->next) {
+            if (i->data > j->data) {
+                swap(i->data, j->data);
+            }
+        }
+    }
+}
+
+int main() {
+    string s;
+    int num;
+
+    while (cin >> s) {
+        if (s == "insert_first") {      // Stack push
+            cin >> num;
+            insert_first(num);
+            print();
+        }
+
+        if (s == "insert_last") {       // Queue enqueue
+            cin >> num;
+            insert_last(num);
+            print();
+        }
+
+        if (s == "pop") {               // Stack pop (delete first)
+            delete_first();
+            print();
+        }
+
+        if (s == "dequeue") {           // Queue dequeue (delete first)
+            delete_first();
+            print();
+        }
+
+        if (s == "asc") {
+            sort_ascending();
+            print();
+        }
+    }
+
+    return 0;
+}
