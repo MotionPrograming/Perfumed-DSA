@@ -1,4 +1,7 @@
 Integer Bisection ----> is not about searching in an array — instead, it is used to calculate and find the root (zero) of a continuous function by checking the sign of the function at midpoints and narrowing the interval.
+bisection ----> function search a targeted value
+
+
 
 
 You are given the equation:
