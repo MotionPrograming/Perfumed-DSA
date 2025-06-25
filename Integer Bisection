@@ -81,7 +81,7 @@ int main()
         ll l = 1, r = 1e6;
         while (l <= r) {
             ll mid = (l + r) / 2;
-            if (calc(mid) == x) {
+            if (calc(mid) >= x) {
                 ans = mid;
                 break;
             }
