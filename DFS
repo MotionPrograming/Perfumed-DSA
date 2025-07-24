@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int n = 1e5 + 5;
+
+vector<vector<int>> adj(n);
+vector<bool> visited(n, false);
+
+void edge(int u, int v)
+{
+    adj[u].push_back(v);
+}
+
+void dfs(int startNode)
+{
+    stack<int> s;
+    s.push(startNode);
+    visited[startNode] = true;
+
+    while (!s.empty())
+    {
+        int u = s.top();
+        s.pop();
+        cout << u << " ";
+
+        for (int v : adj[u])
+        {
+            if (!visited[v])
+            {
+                s.push(v);
+                visited[v] = true;
+            }
+        }
+    }
+}
+int main()
+{
+    int numEdges;
+    cin >> numEdges;
+    for (int i = 0; i < numEdges; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        edge(u, v);
+    }
+
+    int startNode;
+    cin >> startNode;
+    dfs(startNode);
+
+    return 0;
+}
