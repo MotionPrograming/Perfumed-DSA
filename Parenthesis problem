@@ -1,0 +1,66 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Node {
+    char data; // Use char for brackets
+    Node* next;
+};
+
+Node* head = nullptr; // Start with empty stack
+
+void push(char x) {
+    Node* temp = new Node; // Create new node
+    temp->data = x;
+    temp->next = head;
+    head = temp; // Add to top of stack
+}
+
+void pop() {
+    if (head == nullptr) return; // Do nothing if stack is empty
+    Node* temp = head;
+    head = temp->next; // Move to next node
+    delete temp; // Free memory
+}
+
+int main() {
+    string str; // Use string instead of char array
+    bool isBalanced = true; // Track if string is balanced
+
+    cout << "Enter parenthesis: ";
+    getline(cin, str); // Safely read the whole line
+
+    for (char ch : str) {
+        if (ch == '(' || ch == '{' || ch == '[') {
+            push(ch); // Push opening brackets
+        } else if (ch == ')' || ch == '}' || ch == ']') {
+            if (head == nullptr) { // No opening bracket to match
+                isBalanced = false;
+                break;
+            }
+            char top = head->data; // Get top bracket
+            pop(); // Remove it
+            // Check if brackets match
+            if ((ch == ')' && top != '(') ||
+                (ch == '}' && top != '{') ||
+                (ch == ']' && top != '[')) {
+                isBalanced = false;
+                break;
+            }
+        }
+    }
+
+    // Print result: balanced if no mismatches and stack is empty
+    if (isBalanced && head == nullptr) {
+        cout << "Balanced!" << endl;
+    } else {
+        cout << "Not Balanced!" << endl;
+    }
+
+    // Clean up stack
+    while (head != nullptr) {
+        pop();
+    }
+
+    return 0;
+}
