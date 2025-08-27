@@ -1,72 +1,128 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+//ctrate struct
 struct BstNode {
     int data;
     BstNode* left;
     BstNode* right;
 };
 
+BstNode* root = nullptr;
+
+// Create Node
 BstNode* createNode(int value) {
-    BstNode* NewNode = new BstNode();
-    NewNode->data = value;
-    NewNode->left = NULL;
-    NewNode->right = NULL;
-    return NewNode;
+    BstNode* newNode = new BstNode();
+    newNode->data = value;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
 }
 
+// Inserts first
 BstNode* insert(BstNode* root, int value) {
-    if (root == NULL) {
+    if (root == nullptr) {
         return createNode(value);
     }
-
-    if (value <= root->data) {
+    if (value < root->data) {
         root->left = insert(root->left, value);
-    } else {
+    } else if (value > root->data) {
         root->right = insert(root->right, value);
+    } else {
+        cout << "Duplicate value " << value << " avoided\n";
     }
-
     return root;
 }
 
+// Performs in-order traversal 
 void inorder(BstNode* root) {
-    if (root == nullptr) {
-        return;
+    if (root != nullptr) {
+        inorder(root->left);
+        cout << root->data << " ";
+        inorder(root->right);
     }
-
-    inorder(root->left);
-    cout << root->data << " ";
-    inorder(root->right);
 }
 
-int findMinValue(BstNode* root) {
+// Finds  minimum value 
+int findMin(BstNode* root) {
     if (root == nullptr) {
-        cout << "The tree is empty.\n";
+        cout << "Tree is empty.\n";
         return -1;
     }
-
     while (root->left != nullptr) {
         root = root->left;
     }
-
     return root->data;
 }
 
+// Finds maximum value
+int findMax(BstNode* root) {
+    if (root == nullptr) {
+        cout << "Tree is empty.\n";
+        return -1;
+    }
+    while (root->right != nullptr) {
+        root = root->right;
+    }
+    return root->data;
+}
+
+// Deletes_last //key বলতে বোঝায় আপনি যে নোডটি মুছে ফেলতে চান তাতে সংরক্ষিত মান।
+BstNode* deleteNode(BstNode* root, int key) {
+    if (root == nullptr) return nullptr;
+
+    if (key < root->data) {
+        root->left = deleteNode(root->left, key);
+    } else if (key > root->data) {
+        root->right = deleteNode(root->right, key);
+    } else {
+        // Node found: handle 0 or 1 child
+        if (!root->left || !root->right) {
+            BstNode* temp = root->left ? root->left : root->right;
+            delete root;
+            return temp;
+        }
+        // Node with two children: find inorder predecessor (max in left subtree)
+        BstNode* temp = root->left;
+        while (temp->right != nullptr) {
+            temp = temp->right;
+        }
+        root->data = temp->data; // Replace data
+        root->left = deleteNode(root->left, temp->data); // Delete predecessor
+    }
+    return root;
+}
+
 int main() {
-    BstNode* root = nullptr;
+    int n, value;
+    cout << "Enter number of nodes: ";
+    cin >> n;
 
-    root = insert(root, 50);
-    root = insert(root, 100);
-    root = insert(root, 200);
-    root = insert(root, 11);
-    root = insert(root, 111);
-    root = insert(root, 0);
+    cout << "Enter node values:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> value;
+        root = insert(root, value);
+    }
 
-    cout << "Inorder traversal of the BST: ";
+    cout << "\nIn-order Traversal: ";
     inorder(root);
     cout << endl;
 
-    cout << "Minimum value in the BST: " << findMinValue(root) << endl;
+    int minValue = findMin(root);
+    if (minValue != -1)
+        cout << "Minimum value in the BST: " << minValue << endl;
+
+    int maxValue = findMax(root);
+    if (maxValue != -1)
+        cout << "Maximum value in the BST: " << maxValue << endl;
+
+    cout << "\nEnter a value to delete: ";
+    cin >> value;
+    root = deleteNode(root, value);
+
+    cout << "In-order Traversal after deletion: ";
+    inorder(root);
+    cout << endl;
 
     return 0;
 }
