@@ -1,0 +1,113 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int heap[100]; // Array to store numbers
+int size;      // Number of elements in heap
+
+// Swap two elements in the array
+void swap(int &a, int &b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+// Fix heap by moving element down to maintain max-heap (largest at top)
+void heapify(int i) {
+    int largest = i;      // Current node
+    int left = 2 * i + 1; // Left child
+    int right = 2 * i + 2;// Right child
+
+    // Check if left child is larger
+    if (left < size && heap[left] > heap[largest]) {
+        largest = left;
+    }
+    // Check if right child is larger
+    if (right < size && heap[right] > heap[largest]) {
+        largest = right;
+    }
+    // If largest is not current, swap and continue fixing
+    if (largest != i) {
+        swap(heap[i], heap[largest]);
+        heapify(largest);
+    }
+}
+
+// Turn array into a max-heap
+void makeHeap() {
+    for (int i = size / 2 - 1; i >= 0; i--) {
+        heapify(i);
+    }
+}
+
+// Sort array using heap sort (smallest to largest)
+void heapSort() {
+    makeHeap(); // Build max-heap
+    for (int i = size - 1; i > 0; i--) {
+        swap(heap[0], heap[i]); // Move largest to end
+        size--;                 // Reduce heap size
+        heapify(0);             // Fix root
+        size++;                 // Restore size for next iteration
+    }
+}
+
+// Remove largest number from heap
+void deleteMax() {
+    if (size == 0) {
+        cout << "Heap is empty!" << endl;
+        return;
+    }
+    heap[0] = heap[size - 1]; // Replace root with last element
+    size--;                   // Reduce heap size
+    heapify(0);               // Fix heap
+}
+
+// Print the array
+void print(string label) {
+    cout << label << ": ";
+    for (int i = 0; i < size; i++) {
+        cout << heap[i] << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    // Get number of elements
+    cout << "Enter how many numbers (1-100): ";
+    cin >> size;
+
+    // Check if size is valid
+    if (size <= 0 || size > 100) {
+        cout << "Invalid size! Use 1 to 100." << endl;
+        return 1;
+    }
+
+    // Input numbers
+    for (int i = 0; i < size; i++) {
+        cout << "Enter number " << i + 1 << ": ";
+        cin >> heap[i];
+    }
+
+    // Command loop
+    string command;
+    while (true) {
+        cout << "Enter command (sort, heap, delete, exit): ";
+        cin >> command;
+        if (command == "sort") {
+            heapSort();
+            print("Sorted");
+        } else if (command == "heap") {
+            makeHeap();
+            print("Max-Heap");
+        } else if (command == "delete") {
+            deleteMax();
+            print("Heap after delete");
+        } else if (command == "exit") {
+            break;
+        } else {
+            cout << "Invalid command! Try sort, heap, delete, or exit." << endl;
+        }
+    }
+
+    return 0;
+}
