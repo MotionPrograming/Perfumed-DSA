@@ -1,53 +1,61 @@
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int heap[100];
+int heap[100000];
 int heapSize;
 
 void heapify(int i){
-    int largest = i;
-    int left = i*2 + 1;
-    int right = 2*i + 2;
     
-    if(left < heapSize && heap[left] > heap[largest]) largest = left;
-    if(right < heapSize && heap[right] > heap[largest]) largest = right;
+    int largest = i;
+    int left = i*2+1;
+    int right = i*2+2;
+    
+    if(left<heapSize && heap[left]>heap[largest])largest = left;
+    if(right<heapSize && heap[right]>heap[largest])largest = right;
     
     if(largest != i){
-        swap(heap[i], heap[largest]);
+        swap(heap[i],heap[largest]);
         heapify(largest);
     }
 }
 
-void Makeheap(){
-    for(int i = heapSize/2 - 1; i >= 0; i--){
+
+void makeHeap(){
+    for(int i = heapSize/2-1;i>=0;i++){
         heapify(i);
     }
 }
 
 void heapSort(){
-    Makeheap();
-    int x = heapSize;     // save original size
-    for(int i = heapSize - 1; i >= 0; i--){
-        swap(heap[0], heap[i]);
-        heapSize--;       // shrink heap
-        heapify(0);       // re-heapify
-    }
-    heapSize = x;         // restore size for printing
-}
-
-void print(){
-    for(int i = 0; i < heapSize; i++) cout << heap[i] << " ";
-    cout << endl;
-}
-
-int main() {
-    cin >> heapSize;
     
-    for(int i = 0; i < heapSize; i++){
-        cin >> heap[i];
+    int x = heapSize;
+    for(int i = heapSize-1;i>=0;i--){
+        swap(heap[0],heap[i]);
+        heapSize--;
+        heapify(0);
+    }
+    heapSize = x;
+}
+//asscnding
+/*void print(){
+    for(int i =0;i<heapSize;i++){
+        cout<<heap[i]<<" ";
+    }
+}*/
+//decending 
+void print (){
+    for(int i = heapSize-1;i>=0;i--) cout<<heap[i]<<" ";
+}
+int main (){
+    
+    cin>>heapSize;
+    
+    for(int i = 0;i<heapSize;i++){
+        cin>>heap[i];
     }
     
-    cout << "sorted array" << endl;
     heapSort();
     print();
+    
+    return 0;
 }
