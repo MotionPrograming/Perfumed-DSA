@@ -1,46 +1,58 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
+// Define a node structure for our stack
 struct Node {
-    char data;
-    Node* next;
+    char data;     // To store bracket character
+    Node* next;    // Pointer to the next node
 };
 
+// Initialize the top of the stack (head of the linked list)
 Node* head = nullptr;
 
-// Push element onto stack
+// Function to push a character onto the stack
 void push(char x) {
-    Node* temp = new Node();
-    temp->data = x;
-    temp->next = head;
-    head = temp;
+    Node* temp = new Node();  // Allocate new node
+    temp->data = x;           // Set data
+    temp->next = head;        // Point to previous top
+    head = temp;              // Update head to new top
 }
 
-// Pop element from stack
+// Function to pop the top character from the stack
 char pop() {
-    if (head == nullptr) return '\0'; // stack empty
-    Node* temp = head;
-    char value = temp->data;
-    head = head->next;
-    delete temp;
-    return value;
+    if (head == nullptr) return '\0';  // Stack underflow check
+
+    Node* temp = head;        // Temporary pointer to top
+    char value = temp->data;  // Store data to return
+    head = head->next;        // Move head to next node
+    delete temp;              // Delete old top node
+    return value;             // Return popped value
 }
 
-// Check if stack is empty
+// Function to check if the stack is empty
 bool isEmpty() {
     return head == nullptr;
 }
 
-// Check if string has balanced brackets
+// Function to check if the input string has balanced brackets
 bool isBalanced(const char* str) {
     int length = strlen(str);
+
     for (int i = 0; i < length; i++) {
         char ch = str[i];
+
+        // If opening bracket, push onto stack
         if (ch == '(' || ch == '{' || ch == '[') {
             push(ch);
-        } else if (ch == ')' || ch == '}' || ch == ']') {
-            if (isEmpty()) return false; // nothing to match
-            char topChar = pop();
+        }
+        // If closing bracket, check if it matches the last opening bracket
+        else if (ch == ')' || ch == '}' || ch == ']') {
+            if (isEmpty()) return false;  // No matching opening bracket
+
+            char topChar = pop();  // Get the top of the stack
+
+            // Check for mismatch
             if ((ch == ')' && topChar != '(') ||
                 (ch == '}' && topChar != '{') ||
                 (ch == ']' && topChar != '[')) {
@@ -48,12 +60,16 @@ bool isBalanced(const char* str) {
             }
         }
     }
-    return isEmpty(); // stack should be empty if balanced
+
+    // If stack is empty, all brackets matched properly
+    return isEmpty();
 }
 
+// Main function to get user input and check for balance
 int main() {
     char str[100];
-    cout << "Enter a string of parentheses/braces/brackets: ";
+
+    cout << "Enter a string containing brackets (e.g., (), {}, []): ";
     cin >> str;
 
     if (isBalanced(str)) {
