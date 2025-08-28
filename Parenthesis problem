@@ -1,78 +1,65 @@
-#include <bits/stdc++.h>
-
+#include <iostream>
+#include <string.h>
 using namespace std;
 
-// Define a node structure for our stack
+// Node structure for stack
 struct Node {
-    char data;     // To store bracket character
-    Node* next;    // Pointer to the next node
+    char data;
+    Node* next;
 };
 
-// Initialize the top of the stack (head of the linked list)
-Node* head = nullptr;
+// Stack operations
+Node* head = NULL;
 
-// Function to push a character onto the stack
+// Push an element onto the stack
 void push(char x) {
-    Node* temp = new Node();  // Allocate new node
-    temp->data = x;           // Set data
-    temp->next = head;        // Point to previous top
-    head = temp;              // Update head to new top
+    Node* temp = new Node;
+    temp->data = x;
+    temp->next = head;
+    head = temp;
 }
 
-// Function to pop the top character from the stack
+// Pop an element from the stack
 char pop() {
-    if (head == nullptr) return '\0';  // Stack underflow check
-
-    Node* temp = head;        // Temporary pointer to top
-    char value = temp->data;  // Store data to return
-    head = head->next;        // Move head to next node
-    delete temp;              // Delete old top node
-    return value;             // Return popped value
+    if (head == NULL) {
+        return '\0';  // Stack underflow
+    }
+    char popped = head->data;
+    Node* temp = head;
+    head = head->next;
+    delete temp;
+    return popped;
 }
 
-// Function to check if the stack is empty
-bool isEmpty() {
-    return head == nullptr;
+// Check for matching pair
+bool isMatching(char open, char close) {
+    return (open == '(' && close == ')') ||
+           (open == '{' && close == '}') ||
+           (open == '[' && close == ']');
 }
 
-// Function to check if the input string has balanced brackets
-bool isBalanced(const char* str) {
-    int length = strlen(str);
-
-    for (int i = 0; i < length; i++) {
-        char ch = str[i];
-
-        // If opening bracket, push onto stack
+// Check if the expression is balanced
+bool isBalanced(const char* expr) {
+    for (int i = 0; expr[i] != '\0'; i++) {
+        char ch = expr[i];
         if (ch == '(' || ch == '{' || ch == '[') {
             push(ch);
-        }
-        // If closing bracket, check if it matches the last opening bracket
-        else if (ch == ')' || ch == '}' || ch == ']') {
-            if (isEmpty()) return false;  // No matching opening bracket
-
-            char topChar = pop();  // Get the top of the stack
-
-            // Check for mismatch
-            if ((ch == ')' && topChar != '(') ||
-                (ch == '}' && topChar != '{') ||
-                (ch == ']' && topChar != '[')) {
+        } else if (ch == ')' || ch == '}' || ch == ']') {
+            char topChar = pop();
+            if (!isMatching(topChar, ch)) {
                 return false;
             }
         }
     }
-
-    // If stack is empty, all brackets matched properly
-    return isEmpty();
+    return head == NULL;  // Stack should be empty if balanced
 }
 
-// Main function to get user input and check for balance
 int main() {
-    char str[100];
+    char expr[100];
+    cout << "Enter parenthesis: ";
+    cin >> expr;
 
-    cout << "Enter a string containing brackets (e.g., (), {}, []): ";
-    cin >> str;
-
-    if (isBalanced(str)) {
+    if (isBalanced(expr)) {
         cout << "Balanced!" << endl;
     } else {
         cout << "Not Balanced!" << endl;
