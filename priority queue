@@ -1,101 +1,73 @@
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
 using namespace std;
 
-int heap[100]; // Array to store numbers
-int size;      // Number of elements in heap
+int heap[100];
+int heapSize;
 
-// Swap two elements in the array
-void swap(int &a, int &b) {
-    int temp = a;
-    a = b;
-    b = temp;
-}
-
-// Fix heap by moving element down to maintain max-heap (largest at top)
+// Heapify for max-heap
 void heapify(int i) {
-    int largest = i;      // Current node
-    int left = 2 * i + 1; // Left child
-    int right = 2 * i + 2;// Right child
+    int largest = i;
+    int left = i * 2 + 1;
+    int right = i * 2 + 2;
 
-    // Check if left child is larger
-    if (left < size && heap[left] > heap[largest]) {
-        largest = left;
-    }
-    // Check if right child is larger
-    if (right < size && heap[right] > heap[largest]) {
-        largest = right;
-    }
-    // If largest is not current, swap and continue fixing
+    if (left < heapSize && heap[left] > heap[largest]) largest = left;
+    if (right < heapSize && heap[right] > heap[largest]) largest = right;
+
     if (largest != i) {
         swap(heap[i], heap[largest]);
         heapify(largest);
     }
 }
 
-// Turn array into a max-heap
+// Build heap
 void makeHeap() {
-    for (int i = size / 2 - 1; i >= 0; i--) {
+    for (int i = heapSize / 2 - 1; i >= 0; i--) {
         heapify(i);
     }
 }
 
-// Sort array using heap sort (smallest to largest)
+// Heap sort
 void heapSort() {
-    makeHeap(); // Build max-heap
-    for (int i = size - 1; i > 0; i--) {
-        swap(heap[0], heap[i]); // Move largest to end
-        size--;                 // Reduce heap size
-        heapify(0);             // Fix root
-        size++;                 // Restore size for next iteration
+    makeHeap();
+    int originalSize = heapSize;
+    for (int i = heapSize - 1; i > 0; i--) {
+        swap(heap[0], heap[i]);
+        heapSize--;
+        heapify(0);
     }
+    heapSize = originalSize; // restore for printing
 }
 
-// Remove largest number from heap
+// Delete max element
 void deleteMax() {
-    if (size == 0) {
-        cout << "Heap is empty!" << endl;
-        return;
-    }
-    heap[0] = heap[size - 1]; // Replace root with last element
-    size--;                   // Reduce heap size
-    heapify(0);               // Fix heap
+    if (heapSize == 0) return;
+
+    heap[0] = heap[heapSize - 1];
+    heapSize--;
+    heapify(0);
 }
 
-// Print the array
-void print(string label) {
-    cout << label << ": ";
-    for (int i = 0; i < size; i++) {
-        cout << heap[i] << " ";
-    }
+// Print heap
+void print(const string &level) {
+    cout << level << ": ";
+    for (int i = 0; i < heapSize; i++) cout << heap[i] << " ";
     cout << endl;
 }
 
 int main() {
-    // Get number of elements
-    cout << "Enter how many numbers (1-100): ";
-    cin >> size;
+    cin >> heapSize;
 
-    // Check if size is valid
-    if (size <= 0 || size > 100) {
-        cout << "Invalid size! Use 1 to 100." << endl;
-        return 1;
-    }
-
-    // Input numbers
-    for (int i = 0; i < size; i++) {
-        cout << "Enter number " << i + 1 << ": ";
+    for (int i = 0; i < heapSize; i++) {
         cin >> heap[i];
     }
+    print("Initial array");
 
-    // Command loop
     string command;
     while (true) {
-        cout << "Enter command (sort, heap, delete, exit): ";
         cin >> command;
         if (command == "sort") {
             heapSort();
-            print("Sorted");
+            print("Sorted array");
         } else if (command == "heap") {
             makeHeap();
             print("Max-Heap");
@@ -105,9 +77,7 @@ int main() {
         } else if (command == "exit") {
             break;
         } else {
-            cout << "Invalid command! Try sort, heap, delete, or exit." << endl;
+            cout << "Unknown command!" << endl;
         }
     }
-
-    return 0;
 }
