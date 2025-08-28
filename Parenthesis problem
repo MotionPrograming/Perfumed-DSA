@@ -1,5 +1,4 @@
-#include <iostream>
-#include <string.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 // Node structure for stack
@@ -13,53 +12,67 @@ Node* head = NULL;
 
 // Push an element onto the stack
 void push(char x) {
-    Node* temp = new Node;
-    temp->data = x;
-    temp->next = head;
-    head = temp;
+  Node*temp = new Node();
+  temp->data = x;
+  temp->next = head;
+  head = temp;
 }
 
 // Pop an element from the stack
 char pop() {
-    if (head == NULL) {
-        return '\0';  // Stack underflow
-    }
-    char popped = head->data;
-    Node* temp = head;
+    if(head == NULL)return '\0';
+    
+    char x = head->data;
+    Node*temp = head;
     head = head->next;
+    
     delete temp;
-    return popped;
+    return x;
+
 }
 
-// Check for matching pair
-bool isMatching(char open, char close) {
+
+bool isMatching(char open,char close){
     return (open == '(' && close == ')') ||
            (open == '{' && close == '}') ||
-           (open == '[' && close == ']');
+           (open == '[' && close == ']') ;
+    
 }
 
-// Check if the expression is balanced
-bool isBalanced(const char* expr) {
-    for (int i = 0; expr[i] != '\0'; i++) {
-        char ch = expr[i];
-        if (ch == '(' || ch == '{' || ch == '[') {
+
+
+bool isEmpty() {
+    return head == NULL;
+}
+
+bool isBalanced(const char* c){
+    for(int i = 0; c[i] != '\0'; i++){
+        char ch = c[i];
+        
+        if(ch == '(' || ch == '{' || ch == '['){   
             push(ch);
-        } else if (ch == ')' || ch == '}' || ch == ']') {
-            char topChar = pop();
-            if (!isMatching(topChar, ch)) {
+        }
+        else if (ch == ')' || ch == '}' || ch == ']'){  
+            if (isEmpty())  
+                return false;
+                
+            char v = pop();
+            if(!isMatching(v, ch)){
                 return false;
             }
         }
     }
-    return head == NULL;  // Stack should be empty if balanced
+    return isEmpty();
 }
 
-int main() {
-    char expr[100];
-    cout << "Enter parenthesis: ";
-    cin >> expr;
 
-    if (isBalanced(expr)) {
+
+int main() {
+    char c[100];
+    cout << "Enter parenthesis: ";
+    cin >> c;
+
+    if (isBalanced(c)) {
         cout << "Balanced!" << endl;
     } else {
         cout << "Not Balanced!" << endl;
